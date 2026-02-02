@@ -1,0 +1,17 @@
+{
+  "name": "桌游计分器",
+  "short_name": "计分器",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f0f0f0",
+  "theme_color": "#d32f2f",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/806/806131.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
