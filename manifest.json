@@ -1,6 +1,6 @@
 {
-  "name": "桌游计分器",
-  "short_name": "计分器",
+  "name": "桌游计数器",
+  "short_name": "计数器",
   "start_url": "index.html",
   "display": "standalone",
   "orientation": "portrait",
