@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>桌游计分器</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: #f0f0f0;
+            user-select: none;
+            /* 防止长按选中文本 */
+        }
+
+        * {
+            touch-action: none;
+        }
+
+        .player-row {
+            display: flex;
+            flex: 1;
+            border: 2px solid #000;
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            border-right: 1px solid #ccc;
+        }
+
+        /* 顶部/底部增减按钮区域 */
+        .btn-area {
+            display: flex;
+            flex-direction: column;
+            flex: 1
+        }
+
+        .btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 120px;
+            font-weight: bold;
+            background: #fff;
+            border: 1px solid #eee;
+        }
+
+        .btn:active {
+            background: #ddd;
+        }
+
+        .btn1 {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            font-weight: bold;
+            background: #fff;
+            border: 1px solid #eee;
+        }
+
+        .btn1:active {
+            background: #ddd;
+        }
+
+        /* 数值显示区域 */
+        .display {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border: 1px solid #eee;
+        }
+
+        .label {
+            font-size: 30px;
+            color: #666;
+        }
+
+        .number {
+            font-size: 80px;
+            font-weight: bold;
+            cursor: pointer;
+            /* 鼠标悬停时显示小手，提示可点击 */
+        }
+
+        .number:active {
+            opacity: 0.7;
+            /* 点击时稍微变淡，提供视觉反馈 */
+        }
+
+        .hp {
+            color: #d32f2f;
+        }
+
+        .gold {
+            color: #fbc02d;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="player-row">
+
+        <div class="stat-box" id="left-controls">
+        </div>
+
+
+        <div class="stat-box">
+            <div class="display" ontouchstart="switchMode(1, 'hp')">
+                <span class="label">血量</span>
+                <span class="number hp" id="hp1" onclick="setInitialValue('hp1')">30</span>
+            </div>
+            <div class="display" ontouchstart="switchMode(1, 'gold')">
+                <span class="label">金钱</span>
+                <span class="number gold" id="gold1" onclick="setInitialValue('gold1')">0</span>
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="display" ontouchstart="switchMode(2, 'hp')">
+                <span class="label">血量</span>
+                <span class="number hp" id="hp2" onclick="setInitialValue('hp2')">30</span>
+            </div>
+            <div class="display" ontouchstart="switchMode(2, 'gold')">
+                <span class="label">金钱</span>
+                <span class="number gold" id="gold2" onclick="setInitialValue('gold2')">0</span>
+            </div>
+        </div>
+        <div class="stat-box" id="right-controls">
+        </div>
+        <script>
+            function change(id, delta) {
+                const el = document.getElementById(id);
+                let val = parseInt(el.innerText);
+                val += delta;
+                if (val < 0) val = 0; // 下限为0
+                el.innerText = val;
+            }
+
+            function setInitialValue(id) {
+                const el = document.getElementById(id);
+                const currentVal = el.innerText;
+
+                // 弹出输入框，默认值显示当前数值
+                let newValue = prompt("请输入新的初始数值:", currentVal);
+
+                // 逻辑处理：确保用户输入的是数字，且没有点击取消
+                if (newValue !== null && newValue !== "") {
+                    const parsedValue = parseInt(newValue);
+                    if (!isNaN(parsedValue)) {
+                        el.innerText = parsedValue < 0 ? 0 : parsedValue;
+                    } else {
+                        alert("请输入有效的数字！");
+                    }
+                }
+            }
+
+            function switchMode(player, type) {
+                const side = (player === 1) ? 'left-controls' : 'right-controls';
+                const container = document.getElementById(side);
+                const targetId = type + player; // 得到 hp1, gold1 等
+
+                if (type === 'hp') {
+                    // 生成血量模式按钮 (大按钮 + / -)
+                    container.innerHTML = `
+            <div class="btn-area">
+                <div class="btn" ontouchstart="change('${targetId}', 1)">+</div>
+            </div>
+            <div class="btn-area">
+                <div class="btn" ontouchstart="change('${targetId}', -1)">-</div>
+            </div>`;
+                } else {
+                    // 生成金钱模式按钮 (+1+2+3 / -1-2-3)
+                    container.innerHTML = `
+            <div class="btn-area">
+                <div class="btn1" ontouchstart="change('${targetId}', 3)">+3</div>
+                <div class="btn1" ontouchstart="change('${targetId}', 2)">+2</div>
+                <div class="btn1" ontouchstart="change('${targetId}', 1)">+1</div>
+            </div>
+            <div class="btn-area">
+                <div class="btn1" ontouchstart="change('${targetId}', -1)">-1</div>
+                <div class="btn1" ontouchstart="change('${targetId}', -2)">-2</div>
+                <div class="btn1" ontouchstart="change('${targetId}', -3)">-3</div>
+            </div>`;
+                }
+            }
+
+            // 页面加载完成后，默认初始化为血量按钮
+            window.onload = () => {
+                switchMode(1, 'hp');
+                switchMode(2, 'hp');
+            };
+        </script>
+</body>
+
+</html>
