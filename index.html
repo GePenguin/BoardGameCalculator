@@ -199,41 +199,48 @@
             </div>`;
                 }
             }
-// 注册 Service Worker 激活 PWA
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('PWA 激活成功!', reg))
-            .catch(err => console.log('PWA 激活失败:', err));
-    });
-}
+            // 注册 Service Worker 激活 PWA
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('sw.js')
+                        .then(reg => console.log('PWA 激活成功!', reg))
+                        .catch(err => console.log('PWA 激活失败:', err));
+                });
+            }
 
-// 补充：本地数据持久化（防止刷新后数据消失）
-const saveKeys = ['hp1', 'gold1', 'hp2', 'gold2'];
-function saveAll() {
-    saveKeys.forEach(key => {
-        localStorage.setItem(key, document.getElementById(key).innerText);
-    });
-}
+            // 补充：本地数据持久化（防止刷新后数据消失）
+            const saveKeys = ['hp1', 'gold1', 'hp2', 'gold2'];
+            function saveAll() {
+                saveKeys.forEach(key => {
+                    localStorage.setItem(key, document.getElementById(key).innerText);
+                });
+            }
 
-// 修改你原有的 change 和 setInitialValue 函数，在结尾调用 saveAll()
-const originalChange = change;
-change = function(id, delta) {
-    originalChange(id, delta);
-    saveAll();
-};
+            // 修改你原有的 change 和 setInitialValue 函数，在结尾调用 saveAll()
+            const originalChange = change;
+            change = function (id, delta) {
+                originalChange(id, delta);
+                saveAll();
+            };
 
-// 页面加载时恢复数据
-window.addEventListener('DOMContentLoaded', () => {
-    saveKeys.forEach(key => {
-        const val = localStorage.getItem(key);
-        if (val !== null) document.getElementById(key).innerText = val;
-    });
-});
+            // 页面加载时恢复数据
+            window.addEventListener('DOMContentLoaded', () => {
+                saveKeys.forEach(key => {
+                    const val = localStorage.getItem(key);
+                    if (val !== null) document.getElementById(key).innerText = val;
+                });
+            });
             // 页面加载完成后，默认初始化为血量按钮
             window.onload = () => {
                 switchMode(1, 'hp');
                 switchMode(2, 'hp');
+
+                // 尝试锁定横屏 (仅部分安卓浏览器支持)
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('landscape').catch(err => {
+                        console.log("自动锁定横屏被拦截，需手动旋转手机");
+                    });
+                }
             };
         </script>
 </body>
