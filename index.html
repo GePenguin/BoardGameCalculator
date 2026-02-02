@@ -18,6 +18,7 @@
             background: #f0f0f0;
             user-select: none;
             /* 防止长按选中文本 */
+            overflow: hidden; /* 防止横屏出现滚动条 */
         }
 
         * {
@@ -108,6 +109,32 @@
 
         .gold {
             color: #fbc02d;
+        }
+
+        /* 关键：增加媒体查询，当屏幕宽度大于高度（横屏）时改变方向 */
+        @media (orientation: landscape) {
+            body {
+                flex-direction: row;
+                /* 横屏时：左右排列 */
+            }
+
+            .player-row {
+                flex-direction: row;
+                /* 内部玩家区域也改为横向 */
+            }
+
+            .btn {
+                font-size: 60px;
+                /* 横屏高度窄，缩小字体防止溢出 */
+            }
+
+            .btn1 {
+                font-size: 30px;
+            }
+
+            .number {
+                font-size: 60px;
+            }
         }
     </style>
 </head>
