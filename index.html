@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 
 <head>
-    <link rel="manifest" href="manifest.json">
+ <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/806/806131.png">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta charset="UTF-8">
@@ -12,22 +12,34 @@
         body {
             margin: 0;
             font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
             background: #f0f0f0;
             user-select: none;
-            /* 防止长按选中文本 */
-            overflow: hidden; /* 防止横屏出现滚动条 */
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
         }
 
         * {
-            touch-action: none;
+            touch-action: none;/*同时响应多个点触*/
+        }
+
+        @media (orientation: portrait) {
+            body {
+                width: 100vh;
+                height: 100vw;
+                transform: rotate(90deg);
+                transform-origin: bottom left;
+                position: absolute;
+                top: -100vw;
+                left: 0;
+            }
         }
 
         .player-row {
             display: flex;
-            flex: 1;
+            flex-direction: row;
+
+            height: 100%;
             border: 2px solid #000;
         }
 
@@ -110,32 +122,6 @@
         .gold {
             color: #fbc02d;
         }
-
-        /* 关键：增加媒体查询，当屏幕宽度大于高度（横屏）时改变方向 */
-        @media (orientation: landscape) {
-            body {
-                flex-direction: row;
-                /* 横屏时：左右排列 */
-            }
-
-            .player-row {
-                flex-direction: row;
-                /* 内部玩家区域也改为横向 */
-            }
-
-            .btn {
-                font-size: 60px;
-                /* 横屏高度窄，缩小字体防止溢出 */
-            }
-
-            .btn1 {
-                font-size: 30px;
-            }
-
-            .number {
-                font-size: 60px;
-            }
-        }
     </style>
 </head>
 
@@ -200,7 +186,7 @@
             function switchMode(player, type) {
                 const side = (player === 1) ? 'left-controls' : 'right-controls';
                 const container = document.getElementById(side);
-                const targetId = type + player; // 得到 hp1, gold1 等
+                const targetId = type + player; // 得到 hp1, gold1 
 
                 if (type === 'hp') {
                     // 生成血量模式按钮 (大按钮 + / -)
@@ -261,13 +247,6 @@
             window.onload = () => {
                 switchMode(1, 'hp');
                 switchMode(2, 'hp');
-
-                // 尝试锁定横屏 (仅部分安卓浏览器支持)
-                if (screen.orientation && screen.orientation.lock) {
-                    screen.orientation.lock('landscape').catch(err => {
-                        console.log("自动锁定横屏被拦截，需手动旋转手机");
-                    });
-                }
             };
         </script>
 </body>
