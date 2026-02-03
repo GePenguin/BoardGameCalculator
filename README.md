@@ -63,7 +63,11 @@ self.addEventListener('fetch', (e) => {
 }
 ~~~
 ## 安装
-1. 用支持PWA技术的浏览器访问[桌游计数器](https://gepenguin.github.io/BoardGameCalculator/)。
+1. 用支持PWA技术的浏览器访问[桌游计数器](https://gepenguin.github.io/BoardGameCalculator/)。  
+  ~~~
+  Edge、Chrome、Firefox浏览器都支持。  
+  PS：开发调试安装时一定要先到“设置-应用管理-浏览器存储-清除数据-释放空间”后再安装新版本的，否则可能出现不更新的问题，可能这也是用PWA开发单页APP时的缺点——后续更新软件需要用户额外操作。
+  ~~~
 2. 点击“添加到手机”，点击“安装”，即可安装到桌面。
 <p align = "left">
 <img src="./asset/Snipaste_2026-02-03_14-08-48.png"  width="200" />
